@@ -4,7 +4,10 @@ import datetime
 import json
 import pandas as pd
 
-mypath = "D:\jc_new\data"
+#mypath = "D:\\jc_new\\data"
+#allJson = "D:\\jc_new\\combine\\all.json"
+mypath = "/Users/hello/jc_new/data"
+allJson = "/Users/hello/jc_new/combine/all.json"
 files = listdir(mypath)
 
 
@@ -53,7 +56,7 @@ for idx, x in enumerate(matchIDList):
             #print(y["data"]["chlodds"]["LINELIST"])
             for idxz,z in enumerate(y["data"]["chlodds"]["LINELIST"]):
                 if z["MAINLINE"]=="true" :
-                    oddPoint.append(z["LINE"])
+                    oddPoint.append(z["LINE"].split("/")[0])
                     smallOddPoint.append(z["L"].replace("100@",""))
                     bigOddPoint.append(z["H"].replace("100@",""))
     
@@ -74,11 +77,14 @@ for idx, x in enumerate(matchIDList):
         "Low":smallOddPoint,
         "Pool":isSelling
     }
-    pdData = pd.DataFrame(data)
-    pdResult.append({
-            "pd":pdData,
-            "matchid":x
-        })
+    if isSelling[len(isSelling)-1]=="FinalStopSell":
+        pdData = pd.DataFrame(data)
+        pdData.drop(pdData[pdData.Pool=="FinalStopSell"].index, inplace=True)
+        pdData.drop(pdData[pdData.Pool=="NotSelling"].index, inplace=True)
+        pdResult.append({
+                "pd":pdData,
+                "matchid":x
+            })
     #print("-- ",len(timelineDiff)," ",len(cornerResult)," ",len(bigOddPoint)," ",len(oddPoint)," ",len(smallOddPoint))
 
 
@@ -86,7 +92,7 @@ for idx, x in enumerate(matchIDList):
 print(len(pdResult))
 
 gameResult = []
-with open("D:\\jc_new\\combine\\all.json") as json_file:
+with open(allJson) as json_file:
     data = json.load(json_file)
     gameResult = data
 
@@ -94,3 +100,5 @@ print(gameResult)
 for idx, x in enumerate(pdResult):
     if x["matchid"] in gameResult:
         print(x["pd"])
+        print("----" , x["matchid"])
+    
