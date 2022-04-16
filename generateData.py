@@ -79,7 +79,7 @@ for idx, x in enumerate(matchIDList):
     }
     if isSelling[len(isSelling)-1]=="FinalStopSell":
         pdData = pd.DataFrame(data)
-        pdData.drop(pdData[pdData.Pool=="FinalStopSell"].index, inplace=True)
+        #pdData.drop(pdData[pdData.Pool=="FinalStopSell"].index, inplace=True)
         pdData.drop(pdData[pdData.Pool=="NotSelling"].index, inplace=True)
         pdResult.append({
                 "pd":pdData,
@@ -99,6 +99,18 @@ with open(allJson) as json_file:
 print(gameResult)
 for idx, x in enumerate(pdResult):
     if x["matchid"] in gameResult:
-        print(x["pd"])
+        data = {
+            "time":[-1],
+            "corner":[gameResult[x["matchid"]]["cornerresult"]],
+            "High":[0],
+            "Point":[0],
+            "Low":[0],
+            "Pool":[0]
+        }
+        pdData = pd.DataFrame(data)
+        a = x["pd"]
+        frames = [a, pdData]
+        result = pd.concat(frames)
+        print(result)
         print("----" , x["matchid"])
     
