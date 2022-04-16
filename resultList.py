@@ -12,8 +12,8 @@ chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
-#driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
-driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver',options=chrome_options)
+driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
+#driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver',options=chrome_options)
 
 loopIdx = 0
 url ='https://bet.hkjc.com/football/odds/odds_chl.aspx?lang=ch'
@@ -39,37 +39,34 @@ def getChl(url,params):
   s = requests.Session()
   resp = s.get(url=url, params=params)
   data = resp.json()
-  return data[1]
+  return data
 
 
 
-requestUrl = "https://bet.hkjc.com/football/getJSON.aspx?jsontype=odds_chl.aspx"
+requestUrl = "https://bet.hkjc.com/football/getJSON.aspx?jsontype=results.aspx"
 
 activeList = []
+matchList = []
 try:
     matchList = getChl(
         url=requestUrl,
         params=dict()
         )
-    activeList = matchList["matches"]
 except:
   time.sleep(10)
   matchList = getChl(
         url=requestUrl,
         params=dict()
         )
-  activeList = matchList["matches"]
 
-liveMatch = []   
-for idx, x in enumerate(activeList):
-    if x["inplaydelay"] == 'true':
-    #if idx==0:
-        liveMatch.append(x)
-        print(idx, x['cornerresult'])
+for idx, x in enumerate(matchList):
+    if x["name"] == 'ActiveMatches':
+        activeList = x
 
 timestr = time.strftime("%Y%m%d-%H%M%S")
 
-if len(liveMatch)>0:
-    res = json.dumps(liveMatch)
-    with open("data/"+timestr+".json", "w") as outfile:
+if len(activeList)>0:
+    res = json.dumps(activeList)
+    with open("result/"+timestr+".json", "w") as outfile:
         outfile.write(res)
+
