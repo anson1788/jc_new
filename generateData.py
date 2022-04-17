@@ -4,10 +4,10 @@ import datetime
 import json
 import pandas as pd
 
-#mypath = "D:\\jc_new\\data"
-#allJson = "D:\\jc_new\\combine\\all.json"
-mypath = "/Users/hello/jc_new/data"
-allJson = "/Users/hello/jc_new/combine/all.json"
+mypath = "D:\\jc_new\\data"
+allJson = "D:\\jc_new\\combine\\all.json"
+#mypath = "/Users/hello/jc_new/data"
+#allJson = "/Users/hello/jc_new/combine/all.json"
 files = listdir(mypath)
 
 
@@ -21,20 +21,21 @@ dataList = []
 for f in files:
     fullpath = join(mypath, f)
     fileNameTime = f.replace(".json", "")
+    print(fileNameTime)
     with open(fullpath) as json_file:
         data = json.load(json_file)
         for yIdx, y in enumerate(data):
             dataList.append({"time":fileNameTime,"data":y,"matchId":y["matchID"]})
 
 dataList.sort(key=sortable_date)
-
 matchIDList = []
 for idx, x in enumerate(dataList):
     #print(x['data']['matchID'])
     if not any(z in x["data"]["matchID"] for z in matchIDList):
         matchIDList.append(x["data"]["matchID"])
 
-#print(len(dataList))
+#for idx, x in enumerate(matchIDList):
+    #print(x , " ",idx)
 
 
 pdResult = []
@@ -91,13 +92,15 @@ for idx, x in enumerate(matchIDList):
 
 print(len(pdResult))
 
+
 gameResult = []
 with open(allJson) as json_file:
     data = json.load(json_file)
     gameResult = data
 
-print(gameResult)
+
 for idx, x in enumerate(pdResult):
+    print("----" , x["matchid"],idx)
     if x["matchid"] in gameResult:
         data = {
             "time":[-1],
@@ -111,6 +114,7 @@ for idx, x in enumerate(pdResult):
         a = x["pd"]
         frames = [a, pdData]
         result = pd.concat(frames)
-        print(result)
-        print("----" , x["matchid"])
-    
+        #print(result)
+    #print("----" , x["matchid"],idx)
+
+print(len(pdResult))
