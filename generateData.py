@@ -4,10 +4,10 @@ import datetime
 import json
 import pandas as pd
 
-mypath = "D:\\jc_new\\data"
-allJson = "D:\\jc_new\\combine\\all.json"
-#mypath = "/Users/hello/jc_new/data"
-#allJson = "/Users/hello/jc_new/combine/all.json"
+#mypath = "D:\\jc_new\\data"
+#allJson = "D:\\jc_new\\combine\\all.json"
+mypath = "/Users/hello/jc_new/data"
+allJson = "/Users/hello/jc_new/combine/all.json"
 files = listdir(mypath)
 
 
@@ -21,7 +21,6 @@ dataList = []
 for f in files:
     fullpath = join(mypath, f)
     fileNameTime = f.replace(".json", "")
-    print(fileNameTime)
     with open(fullpath) as json_file:
         data = json.load(json_file)
         for yIdx, y in enumerate(data):
@@ -41,6 +40,7 @@ for idx, x in enumerate(dataList):
 pdResult = []
 for idx, x in enumerate(matchIDList):
     timelineList = [] 
+    timeStart = []
     timelineListMinus = []
     timelineDiff = []
 
@@ -52,6 +52,8 @@ for idx, x in enumerate(matchIDList):
     for idxy, y in enumerate(dataList):
         if y["matchId"] == x :
             timelineList.append(y["time"])
+
+            timeStart.append(datetime.datetime.strptime(y["data"]["matchTime"], '%Y-%m-%dT%H:%M:%S+08:00'))
             cornerResult.append(y["data"]["cornerresult"])
             isSelling.append(y["data"]["chlodds"]["POOLSTATUS"])
             #print(y["data"]["chlodds"]["LINELIST"])
@@ -67,7 +69,7 @@ for idx, x in enumerate(matchIDList):
 
     for idxy, y in enumerate(timelineListMinus):
         min = (y-timelineListMinus[0]).total_seconds()/60
-        min = int(min)
+        min = int(min) + 3
         timelineDiff.append(min)
           
     data = {
@@ -80,17 +82,14 @@ for idx, x in enumerate(matchIDList):
     }
     if isSelling[len(isSelling)-1]=="FinalStopSell":
         pdData = pd.DataFrame(data)
-        #pdData.drop(pdData[pdData.Pool=="FinalStopSell"].index, inplace=True)
+        pdData.drop(pdData[pdData.Pool=="FinalStopSell"].index, inplace=True)
+        pdData.drop(pdData[pdData.corner=="-1"].index, inplace=True)
         pdData.drop(pdData[pdData.Pool=="NotSelling"].index, inplace=True)
         pdResult.append({
                 "pd":pdData,
                 "matchid":x
             })
     #print("-- ",len(timelineDiff)," ",len(cornerResult)," ",len(bigOddPoint)," ",len(oddPoint)," ",len(smallOddPoint))
-
-
-
-print(len(pdResult))
 
 
 gameResult = []
@@ -100,7 +99,6 @@ with open(allJson) as json_file:
 
 
 for idx, x in enumerate(pdResult):
-    print("----" , x["matchid"],idx)
     if x["matchid"] in gameResult:
         data = {
             "time":[-1],
@@ -112,9 +110,16 @@ for idx, x in enumerate(pdResult):
         }
         pdData = pd.DataFrame(data)
         a = x["pd"]
+        a.reset_index(drop=True, inplace=True)
+        pdData.reset_index(drop=True, inplace=True)
         frames = [a, pdData]
-        result = pd.concat(frames)
-        #print(result)
+        result = pd.concat(frames, axis=0,ignore_index=True)
+        result.reset_index(drop=True)
+        x["pd"] = result
+        writer = pd.ExcelWriter("excel/"+x["matchid"]+'.xlsx')
+        x["pd"].to_excel(writer, index=False)
+        writer.save()
+        print(x["pd"])
     #print("----" , x["matchid"],idx)
 
 print(len(pdResult))
