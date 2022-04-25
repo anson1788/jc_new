@@ -3,7 +3,10 @@ from os.path import isfile, isdir, join
 import datetime
 import json
 
-mypath = "D:\\jc_new\\result"
+#mypath = "D:\\jc_new\\result"
+#allJson = "D:\\jc_new\\combine\\all.json"
+mypath = "/Users/hello/jc_new/result"
+allJson = "/Users/hello/jc_new/combine/all.json"
 files = listdir(mypath)
 
 
@@ -35,5 +38,5 @@ for idx, x in enumerate(matchSingleResult):
 
 
 res = json.dumps(resultDict)
-with open("combine/all.json", "w") as outfile:
+with open(allJson, "w") as outfile:
      outfile.write(res)
