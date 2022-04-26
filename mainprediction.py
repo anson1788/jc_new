@@ -76,6 +76,8 @@ gameOver = False
 while not gameOver:
     qvalues = model.predict(np.array([currentState[0]]))[0]
     action = np.argmax(qvalues)
+    print(qvalues)
+    print("action ",action)
     nextState[0], reward, gameOver, oddList = env.stepTrue(action)
     currentState = nextState
     if gameOver == True:

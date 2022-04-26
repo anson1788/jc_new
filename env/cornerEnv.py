@@ -97,7 +97,7 @@ class cornerEnv(gym.Env):
     def stepTrue(self, action):
         self.timeIdx = self.timeIdx + 1
         data = self.df[self.dfIdx].iloc[self.timeIdx]
-       
+        dataNext = self.df[self.dfIdx].iloc[self.timeIdx+1]
         stateA = ([
                       data["time"],
                       data["Point"],
@@ -106,7 +106,7 @@ class cornerEnv(gym.Env):
                       data["corner"]])
         done = False
         reward = 0
-        if data["time"]==-1:
+        if dataNext["time"]==-1:
             done = True
         '''
         if len(self.oddList) == 0 and action == 1:
