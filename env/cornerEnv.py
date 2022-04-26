@@ -52,12 +52,14 @@ class cornerEnv(gym.Env):
         reward = 0
         if data["time"]==-1:
             done = True
+        
         if len(self.oddList) == 0 and action == 1:
             reward = -1
         if len(self.oddList) > 3 and action == 0:
             reward = -1
         if len(self.oddList) > 3 and action == 2:
             reward = -1
+        
         if action == 0:
             self.oddList.append({
                 "type":"big",
@@ -66,7 +68,7 @@ class cornerEnv(gym.Env):
                 })
         if action == 2:
             self.oddList.append({
-                "type":"big",
+                "type":"small",
                 "odd":data["Low"],
                 "point":data["Point"]
                 })
@@ -77,26 +79,82 @@ class cornerEnv(gym.Env):
             for idx in range(len(self.oddList)):
                 if self.oddList[idx]["type"]=="small":
                     if result > self.oddList[idx]["point"]:
-                        normalReward = normalReward + self.oddList[idx]["odd"]
+                        normalReward = normalReward + self.oddList[idx]["odd"]-1
                     else:
                         normalReward = normalReward - 1
                 elif self.oddList[idx]["type"]=="big":
                     if result > self.oddList[idx]["point"]:
                         normalReward = normalReward - 1
                     else :
-                        normalReward = normalReward + self.oddList[idx]["odd"]
+                        normalReward = normalReward + self.oddList[idx]["odd"]-1
             if len(self.oddList) == 0 :
-                reward = -3
+                reward = -5
             else:
-                reward = normalReward*2
+                reward = normalReward
        
-        return stateA,reward,done,{}
+        return stateA,reward,done,self.oddList
 
-        
+    def stepTrue(self, action):
+        self.timeIdx = self.timeIdx + 1
+        data = self.df[self.dfIdx].iloc[self.timeIdx]
+       
+        stateA = ([
+                      data["time"],
+                      data["Point"],
+                      data["High"],
+                      data["Low"],
+                      data["corner"]])
+        done = False
+        reward = 0
+        if data["time"]==-1:
+            done = True
+        '''
+        if len(self.oddList) == 0 and action == 1:
+            reward = -1
+        if len(self.oddList) > 3 and action == 0:
+            reward = -1
+        if len(self.oddList) > 3 and action == 2:
+            reward = -1
+        '''
+        if action == 0:
+            self.oddList.append({
+                "type":"big",
+                "odd":data["High"],
+                "point":data["Point"]
+                })
+        if action == 2:
+            self.oddList.append({
+                "type":"small",
+                "odd":data["Low"],
+                "point":data["Point"]
+                })
+        if done == True:
+            reward = 0
+            normalReward = 0
+            result = data["corner"]
+            for idx in range(len(self.oddList)):
+                if self.oddList[idx]["type"]=="small":
+                    if result > self.oddList[idx]["point"]:
+                        normalReward = normalReward + self.oddList[idx]["odd"]-1
+                    else:
+                        normalReward = normalReward - 1
+                elif self.oddList[idx]["type"]=="big":
+                    if result > self.oddList[idx]["point"]:
+                        normalReward = normalReward - 1
+                    else :
+                        normalReward = normalReward + self.oddList[idx]["odd"]-1
+            if len(self.oddList) == 0 :
+                reward = 0
+            else:
+                reward = normalReward
+       
+        return stateA,reward,done,self.oddList
+
     def reset(self):
         self.dfIdx = np.random.randint(0, len(self.df))
         self.timeIdx = 0 
         self.oddList = list()
+        print("Match ", self.df[self.dfIdx])
         for idx in self.df[self.dfIdx].index:
             if self.df[self.dfIdx].iloc[idx]["High"] > 3:
                 self.df[self.dfIdx].at[idx, "High"] = 3

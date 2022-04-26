@@ -12,8 +12,24 @@ import pandas as pd
 import numpy as np
 from brain import Brain
 from dqn import Dqn
-#mypath = "D:\\jc_new\\excel"
-mypath = "/Users/hello/jc_new/excel"
+import tensorflow as tf
+from tensorflow import keras
+if tf.test.gpu_device_name():
+    print('Default GPU Device Details: {}'.format(tf.test.gpu_device_name()))
+    gpus = tf.config.list_physical_devices('GPU')
+    try:
+        tf.config.set_visible_devices(gpus[0], 'GPU')
+        logical_gpus = tf.config.list_logical_devices('GPU')
+        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+    except RuntimeError as e:
+        # Visible devices must be set before GPUs have been initialized
+        print(e)
+else:
+    print("Please install Tensorflow that supports GPU")
+    
+mypath = "D:\\jc_new\\excel"
+modelpath = "D:\\jc_new\\model2704"
+#mypath = "/Users/hello/jc_new/excel"
 
 files = listdir(mypath)
 
@@ -50,6 +66,7 @@ epsilonDecayRate = 0.995
 
 env = cornerEnv(dataList)
 brain = Brain(5, 3, learningRate)
+#brain.model = keras.models.load_model(modelpath)
 model = brain.model
 DQN = Dqn(maxMemory, gamma)
 
@@ -60,11 +77,12 @@ totReward = 0
 rewards = list()
 
 
-while epoch<100:
+while epoch<2000:
     epoch += 1
     currentState = [env.reset()]
     nextState = currentState.copy()
     gameOver = False
+    oddListData = list()
     while not gameOver:
 
         if np.random.rand() <= epsilon:
@@ -72,8 +90,8 @@ while epoch<100:
         else:
             qvalues = model.predict(np.array([currentState[0]]))[0]
             action = np.argmax(qvalues)
-     
-        nextState[0], reward, gameOver, _ = env.step(action)
+        print("action ",action)
+        nextState[0], reward, gameOver, oddlist = env.step(action)
       
         totReward += reward
 
@@ -82,9 +100,12 @@ while epoch<100:
         model.train_on_batch(inputs, targets)
           
         currentState = nextState
-
+        if gameOver ==True:
+            oddListData = oddlist
     epsilon *= epsilonDecayRate
     print('Epoch: ' + str(epoch) + ' Epsilon: {:.5f}'.format(epsilon) + ' Total Reward: {:.2f}'.format(totReward))
+    #print('odd',oddListData)
+    model.save(modelpath)
     rewards.append(totReward)
     totReward = 0
 plt.plot(rewards)
