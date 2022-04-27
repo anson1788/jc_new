@@ -84,6 +84,7 @@ while epoch<2000:
     nextState = currentState.copy()
     gameOver = False
     oddListData = list()
+    '''
     while not gameOver:
 
         if np.random.rand() <= epsilon:
@@ -114,7 +115,7 @@ while epoch<2000:
     model.save(modelpath)
     rewards.append(totReward)
     totReward = 0
-
+    '''
 
 plt.plot(rewards)
 plt.xlabel('Epoch')

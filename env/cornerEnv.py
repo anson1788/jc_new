@@ -99,8 +99,13 @@ class cornerEnv(gym.Env):
         return stateA,reward,done,self.oddList
 
     def reset(self):
-        self.dfIdx = np.random.randint(0, len(self.df))
-        self.timeIdx = 0 
+        isLoop = True
+        while isLoop:
+            self.dfIdx = np.random.randint(0, len(self.df))
+            if len(self.df[self.dfIdx]) > 3:
+                isLoop = False
+            
+        self.timeIdx = 2 
         self.oddList = list()
         print("Match IDX", self.dfIdx)
         #print("Match ", self.df[self.dfIdx])
@@ -109,15 +114,37 @@ class cornerEnv(gym.Env):
                 self.df[self.dfIdx].at[idx, "High"] = 3
             if self.df[self.dfIdx].iloc[idx]["Low"] > 3:
                 self.df[self.dfIdx].at[idx, "Low"] = 3
-        
-        data = self.df[self.dfIdx].iloc[0]
-        state = ([
-                      data["time"],
-                      data["Point"],
-                      data["High"],
-                      data["Low"],
-                      data["corner"]])
+
+        #state = ( self.get3State(self.timeIdx))
         return state
+
+    def get3State(self, idx):
+            data1 = self.df[self.dfIdx].iloc[idx]
+            data2 = self.df[self.dfIdx].iloc[idx-1]
+            data3 = self.df[self.dfIdx].iloc[idx-2]
+            return [
+                        [
+                        data1["time"],
+                        data1["Point"],
+                        data1["High"],
+                        data1["Low"],
+                        data1["corner"]
+                        ],
+                        [
+                        data2["time"],
+                        data2["Point"],
+                        data2["High"],
+                        data2["Low"],
+                        data2["corner"]
+                        ],
+                        [
+                        data3["time"],
+                        data3["Point"],
+                        data3["High"],
+                        data3["Low"],
+                        data3["corner"]
+                        ]
+                    ]
 
     def render(self, mode='human', close=False):
         print("render")
