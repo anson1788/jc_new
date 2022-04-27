@@ -41,62 +41,6 @@ class cornerEnv(gym.Env):
     def step(self, action):
         self.timeIdx = self.timeIdx + 1
         data = self.df[self.dfIdx].iloc[self.timeIdx]
-       
-        stateA = ([
-                      data["time"],
-                      data["Point"],
-                      data["High"],
-                      data["Low"],
-                      data["corner"]])
-        done = False
-        reward = 0
-        if data["time"]==-1:
-            done = True
-        
-        if len(self.oddList) == 0 and action == 1:
-            reward = -1
-        if len(self.oddList) > 3 and action == 0:
-            reward = -1
-        if len(self.oddList) > 3 and action == 2:
-            reward = -1
-        
-        if action == 0:
-            self.oddList.append({
-                "type":"big",
-                "odd":data["High"],
-                "point":data["Point"]
-                })
-        if action == 2:
-            self.oddList.append({
-                "type":"small",
-                "odd":data["Low"],
-                "point":data["Point"]
-                })
-        if done == True:
-            reward = 0
-            normalReward = 0
-            result = data["corner"]
-            for idx in range(len(self.oddList)):
-                if self.oddList[idx]["type"]=="small":
-                    if result > self.oddList[idx]["point"]:
-                        normalReward = normalReward + self.oddList[idx]["odd"]-1
-                    else:
-                        normalReward = normalReward - 1
-                elif self.oddList[idx]["type"]=="big":
-                    if result > self.oddList[idx]["point"]:
-                        normalReward = normalReward - 1
-                    else :
-                        normalReward = normalReward + self.oddList[idx]["odd"]-1
-            if len(self.oddList) == 0 :
-                reward = -5
-            else:
-                reward = normalReward
-       
-        return stateA,reward,done,self.oddList
-
-    def stepTrue(self, action):
-        self.timeIdx = self.timeIdx + 1
-        data = self.df[self.dfIdx].iloc[self.timeIdx]
         dataNext = self.df[self.dfIdx].iloc[self.timeIdx+1]
         stateA = ([
                       data["time"],
@@ -120,31 +64,35 @@ class cornerEnv(gym.Env):
             self.oddList.append({
                 "type":"big",
                 "odd":data["High"],
-                "point":data["Point"]
+                "point":data["Point"],
+                "time":data["time"],
+                "connerAt":data["corner"],
                 })
         if action == 2:
             self.oddList.append({
                 "type":"small",
                 "odd":data["Low"],
-                "point":data["Point"]
+                "point":data["Point"],
+                "time":data["time"],
+                "connerAt":data["corner"],
                 })
+        #if len(self.oddList) == 3:
+            #done = True
+            
         if done == True:
             reward = 0
-            normalReward = 0
-            result = data["corner"]
+            normalReward = 0 - len(self.oddList)
+            result = self.df[self.dfIdx].iloc[-1]["corner"]
+            print("result ",result)
             for idx in range(len(self.oddList)):
                 if self.oddList[idx]["type"]=="small":
-                    if result > self.oddList[idx]["point"]:
-                        normalReward = normalReward + self.oddList[idx]["odd"]-1
-                    else:
-                        normalReward = normalReward - 1
+                    if self.oddList[idx]["point"] > result:
+                        normalReward = normalReward + self.oddList[idx]["odd"]
                 elif self.oddList[idx]["type"]=="big":
-                    if result > self.oddList[idx]["point"]:
-                        normalReward = normalReward - 1
-                    else :
-                        normalReward = normalReward + self.oddList[idx]["odd"]-1
+                    if result > self.oddList[idx]["point"] :
+                        normalReward = normalReward + self.oddList[idx]["odd"]
             if len(self.oddList) == 0 :
-                reward = 0
+                reward = -5
             else:
                 reward = normalReward
        
@@ -154,7 +102,8 @@ class cornerEnv(gym.Env):
         self.dfIdx = np.random.randint(0, len(self.df))
         self.timeIdx = 0 
         self.oddList = list()
-        print("Match ", self.df[self.dfIdx])
+        print("Match IDX", self.dfIdx)
+        #print("Match ", self.df[self.dfIdx])
         for idx in self.df[self.dfIdx].index:
             if self.df[self.dfIdx].iloc[idx]["High"] > 3:
                 self.df[self.dfIdx].at[idx, "High"] = 3

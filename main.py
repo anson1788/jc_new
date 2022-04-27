@@ -14,6 +14,7 @@ from brain import Brain
 from dqn import Dqn
 import tensorflow as tf
 from tensorflow import keras
+from IPython.display import clear_output
 if tf.test.gpu_device_name():
     print('Default GPU Device Details: {}'.format(tf.test.gpu_device_name()))
     gpus = tf.config.list_physical_devices('GPU')
@@ -28,7 +29,7 @@ else:
     print("Please install Tensorflow that supports GPU")
     
 mypath = "D:\\jc_new\\excel"
-modelpath = "D:\\jc_new\\model2704"
+modelpath = "D:\\jc_new\\model2804"
 #mypath = "/Users/hello/jc_new/excel"
 
 files = listdir(mypath)
@@ -61,7 +62,7 @@ learningRate = 0.001
 maxMemory = 50000
 gamma = 0.9
 batchSize = 10
-epsilon = 1.
+epsilon = 1
 epsilonDecayRate = 0.995
 
 env = cornerEnv(dataList)
@@ -90,7 +91,7 @@ while epoch<2000:
         else:
             qvalues = model.predict(np.array([currentState[0]]))[0]
             action = np.argmax(qvalues)
-        print("action ",action)
+        #print("action ",action)
         nextState[0], reward, gameOver, oddlist = env.step(action)
       
         totReward += reward
@@ -102,14 +103,20 @@ while epoch<2000:
         currentState = nextState
         if gameOver ==True:
             oddListData = oddlist
-    epsilon *= epsilonDecayRate
+    if epoch%4==0:
+        epsilon *= epsilonDecayRate
+     
+    for idx in range(len(oddListData)):
+        print("odd ", oddListData[idx])
+    #print("reward ", reward)
     print('Epoch: ' + str(epoch) + ' Epsilon: {:.5f}'.format(epsilon) + ' Total Reward: {:.2f}'.format(totReward))
     #print('odd',oddListData)
     model.save(modelpath)
     rewards.append(totReward)
     totReward = 0
+
+
 plt.plot(rewards)
 plt.xlabel('Epoch')
 plt.ylabel('Rewards')
 plt.show()
-     

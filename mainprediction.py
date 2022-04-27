@@ -76,14 +76,15 @@ gameOver = False
 while not gameOver:
     qvalues = model.predict(np.array([currentState[0]]))[0]
     action = np.argmax(qvalues)
-    print(qvalues)
-    print("action ",action)
+    #print(qvalues)
+    #action = np.random.randint(0, 3)
+    #print("action ",action)
     nextState[0], reward, gameOver, oddList = env.stepTrue(action)
     currentState = nextState
     if gameOver == True:
         oddListData = oddList
         totReward = reward
     
-
-print("odd ", oddListData)
+for idx in range(len(oddListData)):
+    print("odd ", oddListData[idx])
 print("reward ", reward)
