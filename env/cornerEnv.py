@@ -39,15 +39,14 @@ class cornerEnv(gym.Env):
         print("init end")
         
     def step(self, action):
-        self.timeIdx = self.timeIdx + 1
         data = self.df[self.dfIdx].iloc[self.timeIdx]
         dataNext = self.df[self.dfIdx].iloc[self.timeIdx+1]
         stateA = ([
-                      data["time"],
-                      data["Point"],
-                      data["High"],
-                      data["Low"],
-                      data["corner"]])
+                      dataNext["time"],
+                      dataNext["Point"],
+                      dataNext["High"],
+                      dataNext["Low"],
+                      dataNext["corner"]])
         done = False
         reward = 0
         if dataNext["time"]==-1:
@@ -95,6 +94,8 @@ class cornerEnv(gym.Env):
                 reward = -5
             else:
                 reward = normalReward
+        else:
+            self.timeIdx = self.timeIdx + 1
        
         return stateA,reward,done,self.oddList
 
