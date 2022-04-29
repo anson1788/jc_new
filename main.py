@@ -28,9 +28,10 @@ if tf.test.gpu_device_name():
 else:
     print("Please install Tensorflow that supports GPU")
     
-mypath = "D:\\jc_new\\excel"
-modelpath = "D:\\jc_new\\model2804"
-#mypath = "/Users/hello/jc_new/excel"
+#mypath = "D:\\jc_new\\excel"
+#modelpath = "D:\\jc_new\\model2804"
+mypath = "/Users/hello/jc_new/excel"
+modelpath = "/Users/hello/jc_new/model2804"
 
 files = listdir(mypath)
 
@@ -84,6 +85,7 @@ while epoch<2000:
     nextState = currentState.copy()
     gameOver = False
     oddListData = list()
+    DQN.resetMemory()
     while not gameOver:
 
         if np.random.rand() <= epsilon:
