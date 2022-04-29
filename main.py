@@ -103,8 +103,8 @@ while epoch<2000:
         currentState = nextState
         if gameOver ==True:
             oddListData = oddlist
-    #if epoch%4==0:
-    epsilon *= epsilonDecayRate
+    if epoch%4==0:
+        epsilon *= epsilonDecayRate
      
     for idx in range(len(oddListData)):
         print("odd ", oddListData[idx])
