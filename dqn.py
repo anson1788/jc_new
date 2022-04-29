@@ -9,7 +9,10 @@ class Dqn():
           self.maxMemory = maxMemory
           self.discount = discount
           self.memory = list()
-          
+
+     def resetMemory(self):
+          self.memory = list()
+
      #Remembering new experience
      def remember(self, transition, gameOver):
           #print("transition",transition)
@@ -24,11 +27,11 @@ class Dqn():
           numOutputs = model.output_shape[-1]
           
           #Initializing the inputs and targets
-          inputs = np.zeros((min(batchSize, lenMemory), numInputs))
-          targets = np.zeros((min(batchSize, lenMemory), numOutputs))
+          inputs = np.zeros((lenMemory, numInputs))
+          targets = np.zeros((lenMemory, numOutputs))
           
           #Extracting transitions from random experiences 
-          for i, inx in enumerate(np.random.randint(0, lenMemory, size = min(batchSize, lenMemory))):
+          for i in range(lenMemory):
           #for i in range(min(batchSize, lenMemory)):
                currentState, action, reward, nextState = self.memory[i][0]
                gameOver = self.memory[i][1]
