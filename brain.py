@@ -16,7 +16,7 @@ class Brain():
           
           #Creating the neural network
           self.model = Sequential()
-          
+          self.model.trainable = True
           self.model.add(Dense(units = 32, activation = 'relu', input_shape = (self.numInputs, )))
           
           self.model.add(Dense(units = 16, activation = 'relu'))

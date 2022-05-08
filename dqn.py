@@ -29,8 +29,9 @@ class Dqn():
           
           #Extracting transitions from random experiences 
           for i, inx in enumerate(np.random.randint(0, lenMemory, size = min(batchSize, lenMemory))):
-               currentState, action, reward, nextState = self.memory[inx][0]
-               gameOver = self.memory[inx][1]
+          #for i in range(min(batchSize, lenMemory)):
+               currentState, action, reward, nextState = self.memory[i][0]
+               gameOver = self.memory[i][1]
                #Updating inputs and targets
                inputs[i] = np.array([currentState]) 
                nexStateNp = np.array([nextState])
