@@ -64,7 +64,7 @@ maxMemory = 200
 gamma = 0.7
 batchSize = 10
 epsilon = 1
-epsilonDecayRate = 0.99995
+epsilonDecayRate = 0.9995
 
 inputLength = 14
 
@@ -81,7 +81,7 @@ totReward = 0
 rewards = list()
 
 
-while epoch<2000:
+while epoch<5000:
     epoch += 1
     currentState = [env.reset()]
     nextState = currentState.copy()
