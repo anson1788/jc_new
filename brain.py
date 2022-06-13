@@ -19,7 +19,7 @@ class Brain():
           self.model.trainable = True
           self.model.add(Dense(units = 32, activation = 'softmax', input_shape = (self.numInputs, )))
           
-          self.model.add(Dense(units = 16, activation = 'softmax'))
+          self.model.add(Dense(units = 16, activation = 'relu'))
 
           self.model.add(Dense(units = 8, activation = 'softmax'))
           

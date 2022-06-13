@@ -60,20 +60,22 @@ for idx in range(30):
 
 import matplotlib.pyplot as plt
 learningRate = 0.001
-maxMemory = 50000
-gamma = 0.9
+maxMemory = 200
+gamma = 0.7
 batchSize = 10
 epsilon = 1
-epsilonDecayRate = 0.995
+epsilonDecayRate = 0.99995
+
+inputLength = 14
 
 env = cornerEnv(dataList)
-brain = Brain(5, 3, learningRate)
+brain = Brain(inputLength, 3, learningRate)
 #brain.model = keras.models.load_model(modelpath)
 model = brain.model
 DQN = Dqn(maxMemory, gamma)
 
 epoch = 0
-currentState = np.zeros((1, 5))
+currentState = np.zeros((1, inputLength))
 nextState = currentState
 totReward = 0
 rewards = list()
@@ -105,15 +107,15 @@ while epoch<2000:
         currentState = nextState
         if gameOver ==True:
             oddListData = oddlist
-    #if epoch%4==0:
-    epsilon *= epsilonDecayRate
-     
-    for idx in range(len(oddListData)):
-        print("odd ", oddListData[idx])
-    #print("reward ", reward)
-    print('Epoch: ' + str(epoch) + ' Epsilon: {:.5f}'.format(epsilon) + ' Total Reward: {:.2f}'.format(totReward))
-    #print('odd',oddListData)
-    model.save(modelpath)
+    if epoch%4==0:
+        epsilon *= epsilonDecayRate
+    if epoch%20==0: 
+        for idx in range(len(oddListData)):
+            print("odd ", oddListData[idx])
+        #print("reward ", reward)
+        print('Epoch: ' + str(epoch) + ' Epsilon: {:.5f}'.format(epsilon) + ' Total Reward: {:.2f}'.format(totReward))
+        #print('odd',oddListData)
+        model.save(modelpath)
     rewards.append(totReward)
     totReward = 0
 
