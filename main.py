@@ -28,10 +28,10 @@ if tf.test.gpu_device_name():
 else:
     print("Please install Tensorflow that supports GPU")
     
-#mypath = "D:\\jc_new\\excel"
-#modelpath = "D:\\jc_new\\model2804"
-mypath = "/Users/hello/jc_new/excel"
-modelpath = "/Users/hello/jc_new/model2804"
+mypath = "D:\\jc_new\\excel"
+modelpath = "D:\\jc_new\\model2804"
+#mypath = "/Users/hello/jc_new/excel"
+#modelpath = "/Users/hello/jc_new/model2804"
 
 files = listdir(mypath)
 
@@ -43,45 +43,40 @@ for f in files:
     df = pd.read_excel(fullpath)
     dataList.append(df)
 
-#env = cornerEnv(dataList)
-#env.reset()
-
-
-#verify step
-'''
-for idx in range(30):
-    state, reward , done, _ = env.step(0)
-    #print(idx)
-    print(reward)
-    if done == True:
-        break
-'''
-
+print(dataList)
 
 import matplotlib.pyplot as plt
+
+inputLength = 14
+outputlength = 3
+
 learningRate = 0.001
+brain = Brain(inputLength, outputlength, learningRate)
+
+env = cornerEnv(dataList)
+
 maxMemory = 200
-gamma = 0.7
+gamma = 0.8
+DQN = Dqn(maxMemory, gamma)
+#brain.model = keras.models.load_model(modelpath)
+model = brain.model
+
+
+
 batchSize = 10
 epsilon = 1
 epsilonDecayRate = 0.9995
 
-inputLength = 14
-
-env = cornerEnv(dataList)
-brain = Brain(inputLength, 3, learningRate)
-#brain.model = keras.models.load_model(modelpath)
-model = brain.model
-DQN = Dqn(maxMemory, gamma)
 
 epoch = 0
+
 currentState = np.zeros((1, inputLength))
 nextState = currentState
 totReward = 0
 rewards = list()
 
 
-while epoch<5000:
+while epoch<10000:
     epoch += 1
     currentState = [env.reset()]
     nextState = currentState.copy()
