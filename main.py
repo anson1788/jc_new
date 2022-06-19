@@ -27,23 +27,32 @@ if tf.test.gpu_device_name():
         print(e)
 else:
     print("Please install Tensorflow that supports GPU")
-    
-mypath = "D:\\jc_new\\excel"
-modelpath = "D:\\jc_new\\model2804"
-#mypath = "/Users/hello/jc_new/excel"
-#modelpath = "/Users/hello/jc_new/model2804"
 
+'''
+define model and data path
+'''
+platform = "mac"
+
+mypath = "D:\\jc_new2\\excel"
+modelpath = "D:\\jc_new2\\modelData"
+if platform == "mac":
+    mypath = "/Users/hello/jc_new2/excel"
+    modelpath = "/Users/hello/jc_new2/modelData"
+
+# start read data end 
 files = listdir(mypath)
-
-
 dataList = []
+print("-----")
 for f in files:
     fullpath = join(mypath, f)
     fileNameTime = f.replace(".xlsx", "")
     df = pd.read_excel(fullpath)
     dataList.append(df)
+print(len(dataList))
+print("-----")
+# read data end 
 
-print(dataList)
+
 
 import matplotlib.pyplot as plt
 
@@ -63,9 +72,9 @@ model = brain.model
 
 
 
-batchSize = 10
+batchSize = 5
 epsilon = 1
-epsilonDecayRate = 0.9995
+epsilonDecayRate = 0.999
 
 
 epoch = 0
@@ -76,7 +85,7 @@ totReward = 0
 rewards = list()
 
 
-while epoch<10000:
+while epoch<5000:
     epoch += 1
     currentState = [env.reset()]
     nextState = currentState.copy()

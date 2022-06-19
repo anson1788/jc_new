@@ -4,7 +4,7 @@
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam 
 
 #Building the Brain class
 class Brain():

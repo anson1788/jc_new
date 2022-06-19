@@ -46,7 +46,7 @@ while True:
           
           #Updating the Environment
           nextState[0], reward, gameOver, _ = env.step(action)
-          env.render()
+          #env.render()
           
           totReward += reward
           
