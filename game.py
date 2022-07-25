@@ -2,7 +2,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from twocaptcha import TwoCaptcha
 import sys
 import urllib.request
 import os
