@@ -18,15 +18,13 @@ os.system('killall Google\ Chrome')
 driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
 
 
-houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=51&title=1&sgt=4&hall=1&mute=1"
-#houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=551&title=1&sgt=4&hall=4&mute=1"
-
-
+#houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=51&title=1&sgt=4&hall=1&mute=1"
+houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=551&title=1&sgt=4&hall=4&mute=1"
 
 def playSound():
   os.system('afplay sound/bet.wav &')
 
-playSound()
+#playSound()
 
 
 loopIdx = 0
@@ -84,7 +82,12 @@ os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
 betDict = {}
 while True:
     
-    currentUrl = driver.current_url
+    try:
+        currentUrl = driver.current_url
+    except Exception as e:
+        os.system('sh rerungame.sh &')
+        sys.exit()
+
     while currentUrl!=houseUrl:
         print("getHouseUrl")
         driver.get(houseUrl)
@@ -95,8 +98,7 @@ while True:
         diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
         while(len(diceRoadLi)==0):
             diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
-        print("----")
-        print(diceRoadLi)
+        
         diceRoadLi[0].click()
 
             
@@ -130,18 +132,16 @@ while True:
             idxGameIdx = idxGameIdx + col*5 +  row + 1
             gameList[str(idxGameIdx)] = x
             maxGame = max(maxGame,idxGameIdx)
-        print("maxGame")
-        print(maxGame)
+
         reverseRow = (maxGame-1)%5
         reverseCol = (maxGame-1-reverseRow)/5
         reverseCol = int(reverseCol)
-        print("idx_"+str(reverseCol)+"_"+str(reverseRow))
     
         for idxX in range(maxGame, maxGame-10, -1):
             x = gameList[str(idxX)]
             listp = x.find_elements(By.XPATH, "p")
             result = listp[0].get_attribute('innerHTML')
-            print(result[0] + "-"+result[1]+'-'+result[2])
+            #print(result[0] + "-"+result[1]+'-'+result[2])
             resultInt = int(result[0])+int(result[1])+int(result[2])
             putV = 'S'
             if int(resultInt)>10:
@@ -150,7 +150,7 @@ while True:
                 putV = 'T'
             resultList.append(putV)
             if putV == 'T' :
-                resultListOE.append("putV")
+                resultListOE.append("T")
             elif int(resultInt)%2 == 0:
                 resultListOE.append("E")
             else :
@@ -229,10 +229,25 @@ while True:
                    btnIcon[0].click()
                    time.sleep(0.2)
                    btnIcon[0].click()
+                if placeBet == 1600:
+                   time.sleep(0.1)
+                   btnIcon[0].click()
+                   time.sleep(0.1)
+                   btnIcon[0].click()
+                   time.sleep(0.1)
+                   btnIcon[0].click()
+                   time.sleep(0.1)
+                   btnIcon[0].click()
+                   time.sleep(0.1)
+                   btnIcon[0].click()
+                   time.sleep(0.1)
+                   btnIcon[0].click()
+                   time.sleep(0.1)
+                   btnIcon[0].click()
 
             time.sleep(0.2)
             confirm = driver.find_elements(by=By.ID,value='confirm')
-            #confirm[0].click()
+            confirm[0].click()
             betDict[str(maxGame)]={}
             betDict[str(maxGame)]["bet"]=placeBet
             betDict[str(maxGame)]["type"]=betValue
@@ -271,7 +286,9 @@ while True:
                 playBet("EVEN",maxGame)
             elif AllEven == True:
                 playBet("ODD",maxGame)
-        playBet("ODD",maxGame)
+            else :
+                betDict = {}
+        #playBet("ODD",maxGame)
             
         time.sleep(1)
     except Exception as e:
