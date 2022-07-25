@@ -115,6 +115,7 @@ while True:
         crtRoundTxt = crtRound[0].get_attribute('innerHTML').replace(" ", "")
         print(crtRoundTxt)
         resultList = list()
+        resultListOE = list()
         idx = 0
 
 
@@ -149,6 +150,12 @@ while True:
             if result[0] == result[1] and result[1] == result[2]:
                 putV = 'T'
             resultList.append(putV)
+            if putV == 'T' :
+                resultListOE.append("putV")
+            else if int(resultInt)%2 == 0:
+                resultListOE.append("E")
+            else :
+                resultListOE.append("O")
  
         bigSmallRoadLi = driver.find_elements(by=By.ID,value='bigSmallRoadLi')
         bigSmallRoadLi[0].click()
@@ -173,42 +180,90 @@ while True:
         '''
         Re = len(resultList)
         
-        def playBet(betValue,gameRound):
-            playSound()
-            if betDict.has_key(betValue):
+        def playBet(betValue,maxGame):
+            if str(maxGame) in betDict:
                 return
+            lastBet = 0 
+            placeBet = 50
+            if str(maxGame-1) in betDict:
+                if betDict[str(maxGame-1)]["type"]==betValue:
+                    lastBet = betDict[str(maxGame-1)]["bet"]
+            if lastBet!=0:
+                placeBet = lastBet*2
             playSound()
             chips = driver.find_elements(by=By.ID,value='chips')
+            
             chipsSet = chips[0].find_elements(By.XPATH, "li")
-            chipsSet[3].click()
+            if placeBet == 50:
+                chipsSet[3].click()
+            
+            if placeBet == 100:
+                chipsSet[4].click()
+
+            if placeBet == 200:
+                chipsSet[5].click()
+            
+            betName = ''
             if betValue == "SMALL":
-                small = driver.find_elements(by=By.ID,value='BetSmall')
-                small[0].click()
+                betName = 'BetSmall'
             if betValue == "BIG":
-                big = driver.find_elements(by=By.ID,value='BetBig')
-                big[0].click()
-            time.sleep(1)
+                betName = 'BetBig'
+            if betValue == "EVEN":
+                betName = 'BetEven'
+            if betValue == "ODD":
+                betName = 'BetOdd'
+            if betName !="":      
+                btnIcon = driver.find_elements(by=By.ID,value=betName)
+                btnIcon[0].click()
+                if placeBet == 400:
+                   time.sleep(0.2)
+                   btnIcon[0].click()
+                if placeBet == 800:
+                   time.sleep(0.2)
+                   btnIcon[0].click()
+                   time.sleep(0.2)
+                   btnIcon[0].click()
+                   time.sleep(0.2)
+                   btnIcon[0].click()
+
+            time.sleep(0.2)
             confirm = driver.find_elements(by=By.ID,value='confirm')
             #confirm[0].click()
-            betDict[gameRound]={}
-            betDict[gameRound]["bet"]=betValue
+            betDict[str(maxGame)]={}
+            betDict[str(maxGame)]["bet"]=placeBet
+            betDict[str(maxGame)]["type"]=betValue
         
         if Re>5:
             AllSmall=True 
             AllBig = True
+
+            AllEven=True 
+            AllOdd = True
             print('-----')
             for y in range(5):
                 print(resultList[y])
             for y in range(5):
-                if resultList[y]!='S':
+                if resultList[y]=='L':
                    AllSmall=False 
             for y in range(5):
-                if resultList[y]!='L':
+                if resultList[y]=='S':
                    AllBig=False 
+
+            for y in range(5):
+                if resultListOE[y]=='E':
+                   AllOdd=False 
+            for y in range(5):
+                if resultListOE[y]=='O':
+                   AllEven=False 
+
             if AllBig == True:
-                playBet("BIG",crtRoundTxt)
-            if AllSmall == True:
-                playBet("SMALL",crtRoundTxt)
+                playBet("SMALL",maxGame)
+            else if AllSmall == True:
+                playBet("BIG",maxGame)
+            else if AllOdd == True:
+                playBet("EVEN",maxGame)
+            else if AllEven == True:
+                playBet("ODD",maxGame)
 
             
         time.sleep(1)
