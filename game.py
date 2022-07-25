@@ -242,6 +242,9 @@ while True:
             print('-----')
             for y in range(5):
                 print(resultList[y])
+            print('*******')
+            for y in range(5):
+                print(resultListOE[y])
             for y in range(5):
                 if resultList[y]=='L':
                    AllSmall=False 
