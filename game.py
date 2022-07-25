@@ -15,7 +15,7 @@ os.system('killall Google\ Chrome')
 
 
 #driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
-driver = webdriver.Chrome(executable_path='/Users/hello/Desktop/chrome/chromedriver',options=chrome_options)
+driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
 
 
 houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=51&title=1&sgt=4&hall=1&mute=1"
@@ -180,6 +180,11 @@ while True:
         Re = len(resultList)
         
         def playBet(betValue,maxGame):
+            countdown = driver.find_elements(by=By.ID,value='countdown')
+            countdownR = countdown[0].find_elements(By.XPATH, "span")
+            countdownTxt = countdownR[0].get_attribute('innerHTML')
+            if countdownTxt == "":
+                return
             if str(maxGame) in betDict:
                 return
             lastBet = 0 
@@ -266,10 +271,10 @@ while True:
                 playBet("EVEN",maxGame)
             elif AllEven == True:
                 playBet("ODD",maxGame)
-
+        playBet("ODD",maxGame)
             
         time.sleep(1)
     except Exception as e:
         print("exception "+ str(e))
-        #driver.get(houseUrl)
-        #time.sleep(2)
+        driver.get(houseUrl)
+        time.sleep(2)
