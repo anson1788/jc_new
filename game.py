@@ -152,7 +152,7 @@ while True:
             resultList.append(putV)
             if putV == 'T' :
                 resultListOE.append("putV")
-            else if int(resultInt)%2 == 0:
+            elif int(resultInt)%2 == 0:
                 resultListOE.append("E")
             else :
                 resultListOE.append("O")
@@ -261,11 +261,11 @@ while True:
 
             if AllBig == True:
                 playBet("SMALL",maxGame)
-            else if AllSmall == True:
+            elif AllSmall == True:
                 playBet("BIG",maxGame)
-            else if AllOdd == True:
+            elif AllOdd == True:
                 playBet("EVEN",maxGame)
-            else if AllEven == True:
+            elif AllEven == True:
                 playBet("ODD",maxGame)
 
             
