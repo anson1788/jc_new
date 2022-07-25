@@ -6,7 +6,7 @@ import json
 #mypath = "D:\\jc_new\\result"
 #allJson = "D:\\jc_new\\combine\\all.json"
 mypath = "/Users/hello/jc_new/result"
-allJson = "/Users/hello/jc_new/combine/all.json"
+allJson = "/Users/hello/jc_new/combine/allNew.json"
 files = listdir(mypath)
 
 

@@ -28,9 +28,9 @@ if tf.test.gpu_device_name():
 else:
     print("Please install Tensorflow that supports GPU")
     
-mypath = "D:\\jc_new\\excel"
-modelpath = "D:\\jc_new\\model2804"
-#mypath = "/Users/hello/jc_new/excel"
+#mypath = "D:\\jc_new\\excel"
+#modelpath = "D:\\jc_new\\model2804"
+mypath = "/Users/hello/jc_new/excel"
 
 files = listdir(mypath)
 
