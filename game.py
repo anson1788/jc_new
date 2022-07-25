@@ -63,9 +63,9 @@ btn[0].click()
 
 
 url ='https://www.dc239.com/gamelobby/live'
+time.sleep(1)
 driver.get(url)
 submenu = driver.find_elements(by=By.CLASS_NAME,value='gp-logo')
-print(submenu)
 while(len(submenu)==0):
     submenu = driver.find_elements(by=By.CLASS_NAME,value='gp-logo')
 
@@ -94,7 +94,6 @@ while True:
 
     try:
         diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
-        print(diceRoadLi)
         while(len(diceRoadLi)==0):
             diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
         print("----")
@@ -106,6 +105,7 @@ while True:
         while(len(diceRoadPositionDiv)==0):
             diceRoadPositionDiv = driver.find_elements(by=By.ID,value='diceRoadPositionDiv')
         time.sleep(1)
+        arr = []
         arr = diceRoadPositionDiv[0].find_elements(By.XPATH, "div")
 
   
@@ -116,7 +116,46 @@ while True:
         print(crtRoundTxt)
         resultList = list()
         idx = 0
+
+
+        maxGame = 0
+        gameList = {}
         for x in arr:
+            eId = str(x.get_attribute('id'))
+            eIdx = eId.split("_")
+           
+            col=int(eIdx[1])
+            row=int(eIdx[2])
+            idxGameIdx = 0 
+            idxGameIdx = idxGameIdx + col*5 +  row + 1
+            gameList[str(idxGameIdx)] = x
+            maxGame = max(maxGame,idxGameIdx)
+        print("maxGame")
+        print(maxGame)
+        reverseRow = (maxGame-1)%5
+        reverseCol = (maxGame-1-reverseRow)/5
+        reverseCol = int(reverseCol)
+        print("idx_"+str(reverseCol)+"_"+str(reverseRow))
+    
+        for idxX in range(maxGame, maxGame-10, -1):
+            x = gameList[str(idxX)]
+            listp = x.find_elements(By.XPATH, "p")
+            result = listp[0].get_attribute('innerHTML')
+            print(result[0] + "-"+result[1]+'-'+result[2])
+            resultInt = int(result[0])+int(result[1])+int(result[2])
+            putV = 'S'
+            if int(resultInt)>10:
+                putV = 'L'
+            if result[0] == result[1] and result[1] == result[2]:
+                putV = 'T'
+            resultList.append(putV)
+ 
+        bigSmallRoadLi = driver.find_elements(by=By.ID,value='bigSmallRoadLi')
+        bigSmallRoadLi[0].click()
+        '''
+        for x in arr:
+            eId = x.get_attribute('id')
+            eIdx = eId.split("_")
             if idx < 10:
                 listp = x.find_elements(By.XPATH, "p")
                 result = listp[0].get_attribute('innerHTML')
@@ -131,6 +170,7 @@ while True:
                 idx = idx + 1
             else :
                 break
+        '''
         Re = len(resultList)
         
         def playBet(betValue,gameRound):
@@ -172,7 +212,7 @@ while True:
 
             
         time.sleep(1)
-    except:
-        print("exception")
-        driver.get(houseUrl)
-        time.sleep(2)
+    except Exception as e:
+        print("exception "+ str(e))
+        #driver.get(houseUrl)
+        #time.sleep(2)
