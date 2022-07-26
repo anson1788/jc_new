@@ -18,8 +18,8 @@ os.system('killall Google\ Chrome')
 driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
 
 
-#houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=51&title=1&sgt=4&hall=1&mute=1"
-houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=551&title=1&sgt=4&hall=4&mute=1"
+houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=51&title=1&sgt=4&hall=1&mute=1"
+#houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=551&title=1&sgt=4&hall=4&mute=1"
 
 def playSound():
   os.system('afplay sound/bet.wav &')
@@ -29,20 +29,28 @@ def playSound():
 
 loopIdx = 0
 url ='https://www.dc239.com'
-driver.get(url)
-btn = driver.find_elements(by=By.CLASS_NAME,value='mps-close')
-while(len(btn)!=1):
-    btn = driver.find_elements(by=By.CLASS_NAME,value='mps-close')
+driver.set_page_load_timeout(10)
+try:
+    driver.get(url)
+except Exception as e:
+    print("keep")
+
+btn = driver.find_elements(by=By.CLASS_NAME,value='close')
+while(len(btn)==0):
+    print("get btn")
+    btn = driver.find_elements(by=By.CLASS_NAME,value='close')
+time.sleep(1)
 btn[0].click()
 
 
 username = driver.find_elements(by=By.CLASS_NAME,value='username-btn')
-while(len(username)!=1):
+while(len(username)==0):
+    print("username")
     username = driver.find_elements(by=By.CLASS_NAME,value='username-btn')
 username[0].send_keys("anson1788")
 
 password = driver.find_elements(by=By.CLASS_NAME,value='password-btn')
-while(len(password)!=1):
+while(len(password)==0):
     password = driver.find_elements(by=By.CLASS_NAME,value='password-btn')
 password[0].send_keys("Yu24163914")
 
@@ -61,7 +69,10 @@ btn[0].click()
 
 url ='https://www.dc239.com/gamelobby/live'
 time.sleep(1)
-driver.get(url)
+try:
+    driver.get(url)
+except Exception as e:
+    print("keep")
 submenu = driver.find_elements(by=By.CLASS_NAME,value='gp-logo')
 while(len(submenu)==0):
     submenu = driver.find_elements(by=By.CLASS_NAME,value='gp-logo')
@@ -96,9 +107,15 @@ while True:
 
     try:
         diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
+        diceRoadTime = 0
         while(len(diceRoadLi)==0):
+            print("geting diceRoad")
+            diceRoadTime = diceRoadTime + 1
             diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
-        
+            if diceRoadTime>2000:
+                os.system('sh rerungame.sh &')
+                sys.exit()
+
         diceRoadLi[0].click()
 
             
@@ -204,9 +221,10 @@ while True:
             if placeBet == 100:
                 chipsSet[4].click()
 
-            if placeBet == 200:
+            if placeBet == 200 or placeBet == 400 or placeBet == 800 or placeBet == 1600:
                 chipsSet[5].click()
-            
+
+            time.sleep(0.2)
             betName = ''
             if betValue == "SMALL":
                 betName = 'BetSmall'
@@ -252,42 +270,55 @@ while True:
             betDict[str(maxGame)]["bet"]=placeBet
             betDict[str(maxGame)]["type"]=betValue
         
-        if Re>5:
+        seqIdx = 6
+        if Re>seqIdx:
             AllSmall=True 
             AllBig = True
 
             AllEven=True 
             AllOdd = True
             print('-----')
-            for y in range(5):
+            for y in range(seqIdx):
                 print(resultList[y])
             print('*******')
-            for y in range(5):
+            for y in range(seqIdx):
                 print(resultListOE[y])
-            for y in range(5):
+            for y in range(seqIdx):
                 if resultList[y]=='L':
                    AllSmall=False 
-            for y in range(5):
+            for y in range(seqIdx):
                 if resultList[y]=='S':
                    AllBig=False 
 
-            for y in range(5):
+            for y in range(seqIdx):
                 if resultListOE[y]=='E':
                    AllOdd=False 
-            for y in range(5):
+            for y in range(seqIdx):
                 if resultListOE[y]=='O':
                    AllEven=False 
 
-            if AllBig == True:
-                playBet("SMALL",maxGame)
-            elif AllSmall == True:
+            lastBetType = ""
+            if str(maxGame-1) in betDict:
+                lastBetType = betDict[str(maxGame-1)]["type"]
+            if lastBetType == ""
+                if AllBig == True:
+                    playBet("SMALL",maxGame)
+                elif AllSmall == True:
+                    playBet("BIG",maxGame)
+                elif AllOdd == True:
+                    playBet("EVEN",maxGame)
+                elif AllEven == True:
+                    playBet("ODD",maxGame)
+                else :
+                    betDict = {}
+            else if lastBetType=="SMALL" and AllSmall == True:
                 playBet("BIG",maxGame)
-            elif AllOdd == True:
-                playBet("EVEN",maxGame)
-            elif AllEven == True:
+            else if lastBetType=="BIG" and AllBig == True:
+                playBet("SMALL",maxGame)
+            else if lastBetType=="EVEN" and AllEven == True:
                 playBet("ODD",maxGame)
-            else :
-                betDict = {}
+            else if lastBetType=="ODD" and AllOdd == True:
+                playBet("EVEN",maxGame)
         #playBet("ODD",maxGame)
             
         time.sleep(1)
