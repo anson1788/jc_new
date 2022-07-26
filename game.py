@@ -270,7 +270,7 @@ while True:
             betDict[str(maxGame)]["bet"]=placeBet
             betDict[str(maxGame)]["type"]=betValue
         
-        seqIdx = 6
+        seqIdx = 5
         if Re>seqIdx:
             AllSmall=True 
             AllBig = True
@@ -300,7 +300,7 @@ while True:
             lastBetType = ""
             if str(maxGame-1) in betDict:
                 lastBetType = betDict[str(maxGame-1)]["type"]
-            if lastBetType == ""
+            if lastBetType == "":
                 if AllBig == True:
                     playBet("SMALL",maxGame)
                 elif AllSmall == True:
@@ -311,14 +311,14 @@ while True:
                     playBet("ODD",maxGame)
                 else :
                     betDict = {}
-            else if lastBetType=="SMALL" and AllSmall == True:
-                playBet("BIG",maxGame)
-            else if lastBetType=="BIG" and AllBig == True:
+            elif lastBetType=="SMALL" and AllBig == True:
                 playBet("SMALL",maxGame)
-            else if lastBetType=="EVEN" and AllEven == True:
-                playBet("ODD",maxGame)
-            else if lastBetType=="ODD" and AllOdd == True:
+            elif lastBetType=="BIG" and AllSmall == True:
+                playBet("BIG",maxGame)
+            elif lastBetType=="EVEN" and AllOdd == True:
                 playBet("EVEN",maxGame)
+            elif lastBetType=="ODD" and AllEven == True:
+                playBet("ODD",maxGame)
         #playBet("ODD",maxGame)
             
         time.sleep(1)
