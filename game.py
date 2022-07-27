@@ -6,6 +6,7 @@ import sys
 import urllib.request
 import os
 import time
+from datetime import datetime
 chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument('--disable-gpu')
@@ -17,6 +18,7 @@ os.system('killall Google\ Chrome')
 #driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
 driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
 
+progStartTime = datetime.now()
 
 houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=51&title=1&sgt=4&hall=1&mute=1"
 #houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=551&title=1&sgt=4&hall=4&mute=1"
@@ -96,7 +98,9 @@ while True:
     try:
         currentUrl = driver.current_url
     except Exception as e:
-        os.system('sh rerungame.sh &')
+        diffInS = (datetime.now() - progStartTime).total_seconds()
+        if diffInS > 5*60:
+            os.system('sh rerungame.sh &')
         sys.exit()
 
     while currentUrl!=houseUrl:
@@ -113,7 +117,9 @@ while True:
             diceRoadTime = diceRoadTime + 1
             diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
             if diceRoadTime>2000:
-                os.system('sh rerungame.sh &')
+                diffInS = (datetime.now() - progStartTime).total_seconds()
+                if diffInS > 5*60:
+                    os.system('sh rerungame.sh &')
                 sys.exit()
 
         diceRoadLi[0].click()
@@ -134,6 +140,7 @@ while True:
         print(crtRoundTxt)
         resultList = list()
         resultListOE = list()
+        resultListVal = list()
         idx = 0
 
 
@@ -166,6 +173,8 @@ while True:
             if result[0] == result[1] and result[1] == result[2]:
                 putV = 'T'
             resultList.append(putV)
+            valList = [result[0],result[1],result[2]]
+            resultListVal.append(valList)
             if putV == 'T' :
                 resultListOE.append("T")
             elif int(resultInt)%2 == 0:
@@ -173,8 +182,8 @@ while True:
             else :
                 resultListOE.append("O")
  
-        bigSmallRoadLi = driver.find_elements(by=By.ID,value='bigSmallRoadLi')
-        bigSmallRoadLi[0].click()
+        #bigSmallRoadLi = driver.find_elements(by=By.ID,value='bigSmallRoadLi')
+        #bigSmallRoadLi[0].click()
         '''
         for x in arr:
             eId = x.get_attribute('id')
@@ -211,6 +220,8 @@ while True:
                     lastBet = betDict[str(maxGame-1)]["bet"]
             if lastBet!=0:
                 placeBet = lastBet*2
+            if placeBet>800:
+                placeBet = 800
             playSound()
             chips = driver.find_elements(by=By.ID,value='chips')
             
@@ -234,6 +245,18 @@ while True:
                 betName = 'BetEven'
             if betValue == "ODD":
                 betName = 'BetOdd'
+            if betValue == "ONE":
+                betName = 'BetS1'
+            if betValue == "TWO":
+                betName = 'BetS2'
+            if betValue == "THR":
+                betName = 'BetS3'
+            if betValue == "FOU":
+                betName = 'BetS4'
+            if betValue == "FIV":
+                betName = 'BetS5'
+            if betValue == "SIX":
+                betName = 'BetS6'
             if betName !="":      
                 btnIcon = driver.find_elements(by=By.ID,value=betName)
                 btnIcon[0].click()
@@ -270,7 +293,28 @@ while True:
             betDict[str(maxGame)]["bet"]=placeBet
             betDict[str(maxGame)]["type"]=betValue
         
-        seqIdx = 5
+        def checkVal(valIdx,checkVal):
+            isMiss = True
+            for y in range(valIdx):
+                if resultListVal[y][0]==checkVal:
+                   isMiss=False 
+                if resultListVal[y][1]==checkVal:
+                   isMiss=False 
+                if resultListVal[y][2]==checkVal:
+                   isMiss=False 
+            return isMiss
+        def checkIsHereValSingle(valIdx,checkVal):
+            isHere = False
+            if resultListVal[0][0]==checkVal:
+                   isHere=True 
+            if resultListVal[0][1]==checkVal:
+                   isHere=True 
+            if resultListVal[0][2]==checkVal:
+                   isHere=True 
+            return isHere
+
+        seqIdx = 7
+        seqValIdx = 7
         if Re>seqIdx:
             AllSmall=True 
             AllBig = True
@@ -289,17 +333,55 @@ while True:
             for y in range(seqIdx):
                 if resultList[y]=='S':
                    AllBig=False 
-
             for y in range(seqIdx):
                 if resultListOE[y]=='E':
                    AllOdd=False 
             for y in range(seqIdx):
                 if resultListOE[y]=='O':
                    AllEven=False 
+            oneMissing = checkVal(seqValIdx,"1")
+            twoMissing = checkVal(seqValIdx,"2")
+            thrMissing = checkVal(seqValIdx,"3")
+            fouMissing = checkVal(seqValIdx,"4")
+            fivMissing = checkVal(seqValIdx,"5")
+            sixMissing = checkVal(seqValIdx,"6")
 
             lastBetType = ""
             if str(maxGame-1) in betDict:
                 lastBetType = betDict[str(maxGame-1)]["type"]
+            if lastBetType != "":
+                if lastBetType == "SMALL" and resultList[0]=='S':
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "BIG"  and resultList[0]=='L':
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "EVEN"  and resultListOE[0]=='E':
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "ODD"  and resultListOE[0]=='O':
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "ONE"  and checkIsHereValSingle(seqValIdx,"1"):
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "TWO"  and checkIsHereValSingle(seqValIdx,"2"):
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "THR"  and checkIsHereValSingle(seqValIdx,"3"):
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "FOU"  and checkIsHereValSingle(seqValIdx,"4"):
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "FIV"  and checkIsHereValSingle(seqValIdx,"5"):
+                   lastBetType=""
+                   betDict = {}
+                elif lastBetType == "SIX"  and checkIsHereValSingle(seqValIdx,"6"):
+                   lastBetType=""
+                   betDict = {}
+
+
             if lastBetType == "":
                 if AllBig == True:
                     playBet("SMALL",maxGame)
@@ -309,8 +391,24 @@ while True:
                     playBet("EVEN",maxGame)
                 elif AllEven == True:
                     playBet("ODD",maxGame)
+                elif oneMissing == True:
+                    playBet("ONE",maxGame)
+                elif twoMissing == True:
+                    playBet("TWO",maxGame)
+                elif thrMissing == True:
+                    playBet("THR",maxGame)
+                elif fouMissing == True:
+                    playBet("FOU",maxGame)
+                elif fivMissing == True:
+                    playBet("FIV",maxGame)
+                elif sixMissing == True:
+                    playBet("SIX",maxGame)
                 else :
                     betDict = {}
+                    diffInS = (datetime.now() - progStartTime).total_seconds()
+                    if diffInS > 25*60:
+                        os.system('sh rerungame.sh &')
+                        sys.exit()
             elif lastBetType=="SMALL" and AllBig == True:
                 playBet("SMALL",maxGame)
             elif lastBetType=="BIG" and AllSmall == True:
@@ -319,6 +417,18 @@ while True:
                 playBet("EVEN",maxGame)
             elif lastBetType=="ODD" and AllEven == True:
                 playBet("ODD",maxGame)
+            elif lastBetType=="ONE" and oneMissing == True:
+                playBet("ONE",maxGame)
+            elif lastBetType=="TWO" and twoMissing == True:
+                playBet("TWO",maxGame)
+            elif lastBetType=="THR" and thrMissing == True:
+                playBet("THR",maxGame)
+            elif lastBetType=="FOU" and fouMissing == True:
+                playBet("FOU",maxGame)
+            elif lastBetType=="FIV" and fivMissing == True:
+                playBet("FIV",maxGame)
+            elif lastBetType=="SIX" and sixMissing == True:
+                playBet("SIX",maxGame)
         #playBet("ODD",maxGame)
             
         time.sleep(1)
