@@ -98,6 +98,7 @@ while True:
     try:
         currentUrl = driver.current_url
     except Exception as e:
+        print("block sll")
         diffInS = (datetime.now() - progStartTime).total_seconds()
         if diffInS > 5*60:
             os.system('sh rerungame.sh &')
@@ -116,19 +117,31 @@ while True:
             print("geting diceRoad")
             diceRoadTime = diceRoadTime + 1
             diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
-            if diceRoadTime>2000:
+            print("block here2")
+            if diceRoadTime>200:
                 diffInS = (datetime.now() - progStartTime).total_seconds()
                 if diffInS > 5*60:
                     os.system('sh rerungame.sh &')
                 sys.exit()
+            else:
+                print("block here")
 
         diceRoadLi[0].click()
 
-            
+        print("new loop")
         diceRoadPositionDiv = driver.find_elements(by=By.ID,value='diceRoadPositionDiv')
+        diceRoadPositionDivCounter = 0
         while(len(diceRoadPositionDiv)==0):
+            diceRoadPositionDivCounter = diceRoadPositionDivCounter + 1
             diceRoadPositionDiv = driver.find_elements(by=By.ID,value='diceRoadPositionDiv')
+            if diceRoadPositionDivCounter > 200 :
+                diffInS = (datetime.now() - progStartTime).total_seconds()
+                if diffInS > 5*60:
+                    os.system('sh rerungame.sh &')
+                sys.exit()
         time.sleep(1)
+        
+
         arr = []
         arr = diceRoadPositionDiv[0].find_elements(By.XPATH, "div")
 
@@ -161,7 +174,7 @@ while True:
         reverseCol = (maxGame-1-reverseRow)/5
         reverseCol = int(reverseCol)
     
-        for idxX in range(maxGame, maxGame-10, -1):
+        for idxX in range(maxGame, maxGame-20, -1):
             x = gameList[str(idxX)]
             listp = x.find_elements(By.XPATH, "p")
             result = listp[0].get_attribute('innerHTML')
@@ -220,8 +233,8 @@ while True:
                     lastBet = betDict[str(maxGame-1)]["bet"]
             if lastBet!=0:
                 placeBet = lastBet*2
-            if placeBet>800:
-                placeBet = 800
+            #if placeBet>800:
+                #placeBet = 800
             playSound()
             chips = driver.find_elements(by=By.ID,value='chips')
             
@@ -313,8 +326,8 @@ while True:
                    isHere=True 
             return isHere
 
-        seqIdx = 7
-        seqValIdx = 7
+        seqIdx = 9
+        seqValIdx = 9
         if Re>seqIdx:
             AllSmall=True 
             AllBig = True
