@@ -17,7 +17,8 @@ os.system('killall Google\ Chrome')
 
 
 #driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
-driver = webdriver.Chrome(executable_path='/Users/hello/Desktop/chrome/chromedriver',options=chrome_options)
+#driver = webdriver.Chrome(executable_path='/Users/hello/Desktop/chrome/chromedriver',options=chrome_options)
+driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
 
 
 houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=51&title=1&sgt=4&hall=1&mute=1"
