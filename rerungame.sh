@@ -1,2 +1,2 @@
 sleep 2
-python3 game.py
+python3 gameLive.py
