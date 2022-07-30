@@ -20,6 +20,7 @@ os.system('killall Google\ Chrome')
 #driver = webdriver.Chrome(executable_path='/Users/hello/Desktop/chrome/chromedriver',options=chrome_options)
 driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
 
+progStartTime = datetime.now()
 
 houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=51&title=1&sgt=4&hall=1&mute=1"
 #houseUrl = "https://bpweb.fuximex555.com/player/singleSicTable.jsp?dm=1&t=551&title=1&sgt=4&hall=4&mute=1"
@@ -100,8 +101,12 @@ while True:
     try:
         currentUrl = driver.current_url
     except Exception as e:
-        os.system('sh rerungame.sh &')
+        print("block sll")
+        diffInS = (datetime.now() - progStartTime).total_seconds()
+        if diffInS > 5*60:
+            os.system('sh rerungame.sh &')
         sys.exit()
+
 
     while currentUrl!=houseUrl:
         print("getHouseUrl")
@@ -116,17 +121,29 @@ while True:
             print("geting diceRoad")
             diceRoadTime = diceRoadTime + 1
             diceRoadLi = driver.find_elements(by=By.ID,value='diceRoadLi')
-            if diceRoadTime>2000:
-                os.system('sh rerungame.sh &')
+            if diceRoadTime>200:
+                diffInS = (datetime.now() - progStartTime).total_seconds()
+                if diffInS > 5*60:
+                    os.system('sh rerungame.sh &')
                 sys.exit()
+            else:
+                print("block here")
 
         #diceRoadLi[0].click()
 
             
         diceRoadPositionDiv = driver.find_elements(by=By.ID,value='diceRoadPositionDiv')
         while(len(diceRoadPositionDiv)==0):
+            diceRoadPositionDivCounter = diceRoadPositionDivCounter + 1
             diceRoadPositionDiv = driver.find_elements(by=By.ID,value='diceRoadPositionDiv')
+            if diceRoadPositionDivCounter > 200 :
+                diffInS = (datetime.now() - progStartTime).total_seconds()
+                if diffInS > 5*60:
+                    os.system('sh rerungame.sh &')
+                sys.exit()
         time.sleep(1)
+
+
         arr = []
         arr = diceRoadPositionDiv[0].find_elements(By.XPATH, "div")
 
@@ -234,8 +251,58 @@ while True:
                    idx = idx + 1
             return idx
 
+        def getHighestBetValue(resultDiceData):
+            returnVal = {}
+            highlightIdx = "0"
+            highlightVal = -1
+            for y in ["1","2","3","4","5","6"]:
+                crtVal = float(resultDiceData[y])
+                if crtVal > highlightVal:
+                    highlightIdx = y
+                    highlightVal = crtVal
+            returnVal["idx"] = highlightIdx
+            returnVal["val"] = highlightVal
+            return returnVal
+
+
         Re = len(resultList)
-        
+        def playBetSingle(betValue,maxGame):
+            countdown = driver.find_elements(by=By.ID,value='countdown')
+            countdownR = countdown[0].find_elements(By.XPATH, "span")
+            countdownTxt = countdownR[0].get_attribute('innerHTML')
+            if countdownTxt == "":
+                return
+            if str(maxGame) in betDict:
+                return
+            placeBet = 50
+            playSound()
+            chips = driver.find_elements(by=By.ID,value='chips')
+            chipsSet = chips[0].find_elements(By.XPATH, "li")
+            if placeBet == 50:
+                chipsSet[3].click()
+                        betName = ''
+            if betValue == "1":
+                betName = 'BetS1'
+            if betValue == "2":
+                betName = 'BetS2'
+            if betValue == "3":
+                betName = 'BetS3'
+            if betValue == "4":
+                betName = 'BetS4'
+            if betValue == "5":
+                betName = 'BetS5'
+            if betValue == "6":
+                betName = 'BetS6'
+            if betName !="":   
+                btnIcon = driver.find_elements(by=By.ID,value=betName)
+                btnIcon[0].click()
+            time.sleep(0.2)
+            confirm = driver.find_elements(by=By.ID,value='confirm')
+            confirm[0].click()
+            betDict[str(maxGame)]={}
+            betDict[str(maxGame)]["bet"]=placeBet
+            betDict[str(maxGame)]["type"]=betValue
+
         def playBet(betValue,maxGame):
             countdown = driver.find_elements(by=By.ID,value='countdown')
             countdownR = countdown[0].find_elements(By.XPATH, "span")
@@ -253,7 +320,6 @@ while True:
                 placeBet = lastBet*2
             playSound()
             chips = driver.find_elements(by=By.ID,value='chips')
-            
             chipsSet = chips[0].find_elements(By.XPATH, "li")
             if placeBet == 50:
                 chipsSet[3].click()
@@ -361,6 +427,9 @@ while True:
                 res = json.dumps(resultDice)
                 with open("dice/"+milliseconds+".json", "w") as outfile:
                     outfile.write(res)
+                highVal = getHighestBetValue(resultDice)
+                if highVal["val"]>18 and  oneMissing = checkVal(2,highVal["idx"]):
+                    playBetSingle(highVal["idx"],maxGame)
             crtRoundInfo = crtRoundTxt
             ''''
             print('-----')

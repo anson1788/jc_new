@@ -15,6 +15,8 @@ from dqn import Dqn
 import tensorflow as tf
 from tensorflow import keras
 from IPython.display import clear_output
+import json
+import pandas as pd
 if tf.test.gpu_device_name():
     print('Default GPU Device Details: {}'.format(tf.test.gpu_device_name()))
     gpus = tf.config.list_physical_devices('GPU')
