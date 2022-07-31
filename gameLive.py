@@ -8,6 +8,7 @@ import urllib.request
 import os
 import json
 import time
+from datetime import datetime
 chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument('--disable-gpu')
@@ -280,7 +281,7 @@ while True:
             chipsSet = chips[0].find_elements(By.XPATH, "li")
             if placeBet == 50:
                 chipsSet[3].click()
-                        betName = ''
+            betName = ''
             if betValue == "1":
                 betName = 'BetS1'
             if betValue == "2":
@@ -428,7 +429,7 @@ while True:
                 with open("dice/"+milliseconds+".json", "w") as outfile:
                     outfile.write(res)
                 highVal = getHighestBetValue(resultDice)
-                if highVal["val"]>18 and  oneMissing = checkVal(2,highVal["idx"]):
+                if highVal["val"]>18 and checkVal(3,highVal["idx"]):
                     playBetSingle(highVal["idx"],maxGame)
             crtRoundInfo = crtRoundTxt
             ''''
