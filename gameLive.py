@@ -18,8 +18,8 @@ os.system('killall Google\ Chrome')
 
 
 #driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
-driver = webdriver.Chrome(executable_path='/Users/hello/Desktop/chrome/chromedriver',options=chrome_options)
-#driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
+#driver = webdriver.Chrome(executable_path='/Users/hello/Desktop/chrome/chromedriver',options=chrome_options)
+driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
 
 progStartTime = datetime.now()
 
@@ -310,8 +310,8 @@ while True:
                 btnIcon = driver.find_elements(by=By.ID,value=betName)
                 btnIcon[0].click()
             time.sleep(0.2)
-            #confirm = driver.find_elements(by=By.ID,value='confirm')
-            #confirm[0].click()
+            confirm = driver.find_elements(by=By.ID,value='confirm')
+            confirm[0].click()
             betDict[str(maxGame)]={}
             betDict[str(maxGame)]["bet"]=placeBet
             betDict[str(maxGame)]["type"]=betValue
@@ -441,9 +441,7 @@ while True:
                 with open("dice/"+milliseconds+".json", "w") as outfile:
                     outfile.write(res)
                 highVal = getHighestBetValue(resultDice)
-                if highVal["val"]>17 and highlightVal<18.1 and \
-                not checkValIdx(0,highVal["idx"]) and \ 
-                checkValIdx(1,highVal["idx"]):
+                if highVal["val"]>17 and highVal["val"]<18 and not checkValIdx(0,highVal["idx"]) and checkValIdx(1,highVal["idx"]):
                     playBetSingle(highVal["idx"],maxGame)
             crtRoundInfo = crtRoundTxt
             ''''
