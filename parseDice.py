@@ -87,21 +87,31 @@ for f in range(len(fileNameList)):
         for y in ["1","2","3","4","5","6"]:
             print(round(float(dataDict[str(idxData)][y]),2))
             crtVal = round(float(dataDict[str(idxData)][y]),2)
-            if crtVal > highlightVal:
-                highlightIdx = y
-                highlightVal = round(float(dataDict[str(idxData)][y]),2)
+            if crtVal < 25:
+                if crtVal > highlightVal:
+                    highlightIdx = y
+                    highlightVal = round(float(dataDict[str(idxData)][y]),2)
         #print('highlight ',highlightVal)
      
-        if highlightVal>18:
+        if highlightVal>17 and highlightVal<18:
             isContainTarget = False 
-            for idxV in range(0,2):
+            isSecContainTarget = False
+            for idxV in range(0,1):
+                resultList = dataDict[str(idxData)]["result"]
+                print(idxV,"?",dataDict[str(idxData)]["result"][idxV])
+                if resultList[idxV][0] == highlightIdx or \
+                resultList[idxV][1] == highlightIdx or \
+                resultList[idxV][2] == highlightIdx :
+                    isContainTarget = True
+            for idxV in range(1,2):
                 resultList = dataDict[str(idxData)]["result"]
                 print(dataDict[str(idxData)]["result"][idxV])
                 if resultList[idxV][0] == highlightIdx or \
                 resultList[idxV][1] == highlightIdx or \
                 resultList[idxV][2] == highlightIdx :
-                    isContainTarget = True
-            if isContainTarget == False :
+                    isSecContainTarget = True
+            if isContainTarget == True and isSecContainTarget == False :
+                print("Bet",highlightIdx)
                 placeBet = placeBet + 1
                 appearIdx = 0
                 if gameResultData[0] == highlightIdx :
