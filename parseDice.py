@@ -51,6 +51,7 @@ winBet = 0
 dup = 0
 for f in range(len(fileNameList)):
     idxData = fileNameList[f]
+    print(idxData)
     isDuplicate = False
     if f>0:
         idxDataLst = fileNameList[f-1]
@@ -98,20 +99,20 @@ for f in range(len(fileNameList)):
             isSecContainTarget = False
             for idxV in range(0,1):
                 resultList = dataDict[str(idxData)]["result"]
-                print(idxV,"?",dataDict[str(idxData)]["result"][idxV])
+                #print(idxV,"?",dataDict[str(idxData)]["result"][idxV])
                 if resultList[idxV][0] == highlightIdx or \
                 resultList[idxV][1] == highlightIdx or \
                 resultList[idxV][2] == highlightIdx :
                     isContainTarget = True
             for idxV in range(1,2):
                 resultList = dataDict[str(idxData)]["result"]
-                print(dataDict[str(idxData)]["result"][idxV])
+                #print(dataDict[str(idxData)]["result"][idxV])
                 if resultList[idxV][0] == highlightIdx or \
                 resultList[idxV][1] == highlightIdx or \
                 resultList[idxV][2] == highlightIdx :
                     isSecContainTarget = True
             if isContainTarget == True and isSecContainTarget == False :
-                print("Bet",highlightIdx)
+                #print("Bet",highlightIdx)
                 placeBet = placeBet + 1
                 appearIdx = 0
                 if gameResultData[0] == highlightIdx :

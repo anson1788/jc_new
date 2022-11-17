@@ -4,13 +4,14 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 import time
-import MySQLdb
 chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument('--headless')
+#chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
+#driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
+driver = webdriver.Chrome(executable_path='/Users/hello/Desktop/chrome/chromedriver',options=chrome_options)
+
 #driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
-driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
 
 loopIdx = 0
 url ='https://bet.hkjc.com/football/odds/odds_chl.aspx?lang=ch'
@@ -72,7 +73,7 @@ def getUrl(idx):
 driver.close()
 
 
-
+'''
 def doQuery( conn ) :
     cur = conn.cursor()
     cur.execute( "SELECT * FROM matchTable" )
@@ -89,3 +90,4 @@ import MySQLdb
 myConnection = MySQLdb.connect( host=hostname, user=username, passwd=password, db=database,port=3306 )
 doQuery( myConnection )
 myConnection.close()
+'''
