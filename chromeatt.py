@@ -6,12 +6,13 @@ import  time
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from blackJackCloud import getChromeDriverPath
 options = ChromeOptions()
 chrm_caps = webdriver.DesiredCapabilities.CHROME.copy()
 chrm_caps['goog:loggingPrefs'] = { 'performance':'ALL' }
 
 options.debugger_address = "127.0.0.1:" + '9222'
-browser = webdriver.Chrome(service=Service(executable_path="/Users/hello/Desktop/chrome/chromedriver109"), options=options,desired_capabilities=chrm_caps)
+browser = webdriver.Chrome(service=Service(executable_path=getChromeDriverPath()), options=options,desired_capabilities=chrm_caps)
 #browser.get("https://evo.nomisma88.com/frontend/evo/r2/#category=all_games&game=blackjack&table_id=sni5cza6d1vvl50i&lobby_launch_id=1756b3d19e574cb2b9cfb74537dd8f0b")
 
 import os
