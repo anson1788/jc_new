@@ -16,7 +16,7 @@ os.system('killall Google\ Chrome')
 
 
 #driver = webdriver.Chrome(executable_path='C:\Windows\chromedriver.exe',options=chrome_options)
-driver = webdriver.Chrome(executable_path='/Users/wn/chrome/chromedriver',options=chrome_options)
+driver = webdriver.Chrome(executable_path='/Users/hello/Desktop/chrome/chromedriver107',options=chrome_options)
 
 progStartTime = datetime.now()
 

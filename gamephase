@@ -1,0 +1,46 @@
+{'id': '00000185d0334c63005071914bca4fda', 'type': 'blackjack.v3.phase', 'args': {'name': 'DealerDealing', 't': 1674235243797, 'gameId': '173c140dc348cab65f1df9d3', 'gameNumber': '17:20:10'}, 'time': 1674235300963}
+-----
+{'id': '00000185d03353f9004f71915bbca073', 'type': 'blackjack.v3.phase', 'args': {'name': 'GameResult', 't': 1674235302892, 'gameId': '173c140dc348cab65f1df9d3', 'gameNumber': '17:20:10'}, 'time': 1674235302905}
+-----
+{'id': '00000185d03367b8003171917fe179a9', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetweenGames', 't': 1674235307960, 'nextGameId': '173c142460fb4691e1c43712'}, 'time': 1674235307960}
+-----
+{'id': '00000185d03367c3004c7191806fffd5', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsOpen', 't': 1674235307953, 'gameId': '173c142460fb4691e1c43712', 'gameNumber': '17:21:47', 'duration': 16000, 'extendedBettingTime': False}, 'time': 1674235307971}
+-----
+{'id': '00000185d033a64d003f7191f0573518', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsClosed', 't': 1674235307953, 'gameId': '173c142460fb4691e1c43712', 'gameNumber': '17:21:47'}, 'time': 1674235323981}
+-----
+{'id': '00000185d033b5f3004f71920b189610', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsClosed', 't': 1674235327974, 'gameId': '173c142460fb4691e1c43712', 'gameNumber': '17:21:47'}, 'time': 1674235327987}
+-----
+{'id': '00000185d033c98d004c719230fb8e92', 'type': 'blackjack.v3.phase', 'args': {'name': 'InitialDealing', 't': 1674235332992, 'gameId': '173c142460fb4691e1c43712', 'gameNumber': '17:21:47'}, 'time': 1674235333005}
+-----
+{'id': '00000185d033f4f90013719273a13f56', 'type': 'blackjack.v3.phase', 'args': {'name': 'PlayerDealing', 't': 1674235344095, 'gameId': '173c142460fb4691e1c43712', 'gameNumber': '17:21:47'}, 'time': 1674235344121}
+-----
+{'id': '00000185d034c4a3004c7193c60d9504', 'type': 'blackjack.v3.phase', 'args': {'name': 'DealerDealing', 't': 1674235344095, 'gameId': '173c142460fb4691e1c43712', 'gameNumber': '17:21:47'}, 'time': 1674235397283}
+-----
+{'id': '00000185d034d918004f7193e544e059', 'type': 'blackjack.v3.phase', 'args': {'name': 'GameResult', 't': 1674235402508, 'gameId': '173c142460fb4691e1c43712', 'gameNumber': '17:21:47'}, 'time': 1674235402520}
+-----
+{'id': '00000185d034ecdb003e719408fa12c3', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetweenGames', 't': 1674235407579, 'nextGameId': '173c143b927f8e89a770fdcf'}, 'time': 1674235407579}
+-----
+{'id': '00000185d034ece200327194098355ac', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsOpen', 't': 1674235407568, 'gameId': '173c143b927f8e89a770fdcf', 'gameNumber': '17:23:27', 'duration': 16000, 'extendedBettingTime': False}, 'time': 1674235407586}
+-----
+{'id': '00000185d0352b6c003f71947fa73bbd', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsClosed', 't': 1674235407568, 'gameId': '173c143b927f8e89a770fdcf', 'gameNumber': '17:23:27'}, 'time': 1674235423596}
+-----
+{'id': '00000185d03530ac003e7194895c64bf', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsClosed', 't': 1674235424932, 'gameId': '173c143b927f8e89a770fdcf', 'gameNumber': '17:23:27'}, 'time': 1674235424940}
+-----
+{'id': '00000185d03530b5004f71948a400242', 'type': 'blackjack.v3.phase', 'args': {'name': 'InitialDealing', 't': 1674235424932, 'gameId': '173c143b927f8e89a770fdcf', 'gameNumber': '17:23:27'}, 'time': 1674235424949}
+-----
+{'id': '00000185d035799e00507195058e9bf1', 'type': 'blackjack.v3.phase', 'args': {'name': 'Insurance', 't': 1674235443595, 'gameId': '173c143b927f8e89a770fdcf', 'gameNumber': '17:23:27', 'duration': 10000}, 'time': 1674235443614}
+-----
+{'id': '00000185d035a0d000327195514e4a4a', 'type': 'blackjack.v3.phase', 'args': {'name': 'GameResult', 't': 1674235453629, 'gameId': '173c143b927f8e89a770fdcf', 'gameNumber': '17:23:27'}, 'time': 1674235453648}
+-----
+{'id': '00000185d035b49a003e7195724d3695', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetweenGames', 't': 1674235458714, 'nextGameId': '173c14477aae08a5dd0bb81f'}, 'time': 1674235458714}
+-----
+{'id': '00000185d035b4a7003271957333b1b0', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsOpen', 't': 1674235458708, 'gameId': '173c14477aae08a5dd0bb81f', 'gameNumber': '17:24:18', 'duration': 16000, 'extendedBettingTime': False}, 'time': 1674235458727}
+-----
+{'id': '00000185d035f32f003e7195e89a7ace', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsClosed', 't': 1674235458708, 'gameId': '173c14477aae08a5dd0bb81f', 'gameNumber': '17:24:18'}, 'time': 1674235474735}
+-----
+{'id': '00000185d03607d9003e7196089b3665', 'type': 'blackjack.v3.phase', 'args': {'name': 'BetsClosed', 't': 1674235478729, 'gameId': '173c14477aae08a5dd0bb81f', 'gameNumber': '17:24:18'}, 'time': 1674235480025}
+-----
+{'id': '00000185d036166a004a719620f3a0b1', 'type': 'blackjack.v3.phase', 'args': {'name': 'InitialDealing', 't': 1674235483748, 'gameId': '173c14477aae08a5dd0bb81f', 'gameNumber': '17:24:18'}, 'time': 1674235483754}
+-----
+{'id': '00000185d03643ff004f71966c251450', 'type': 'blackjack.v3.phase', 'args': {'name': 'PlayerDealing', 't': 1674235495404, 'gameId': '173c14477aae08a5dd0bb81f', 'gameNumber': '17:24:18'}, 'time': 1674235495423}
+-----

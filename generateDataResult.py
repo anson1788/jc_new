@@ -37,6 +37,6 @@ for idx, x in enumerate(matchSingleResult):
     print(x['matchID'], x['matchTime'])
 
 
-res = json.dumps(resultDict)
-with open(allJson, "w") as outfile:
+res = json.dumps(resultDict,ensure_ascii=True)
+with open(allJson, "w",encoding="utf8") as outfile:
      outfile.write(res)
