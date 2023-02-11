@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 
 lower_red = np.array([0,0,200], dtype = "uint8") 
-
 upper_red= np.array([100,120,250], dtype = "uint8")
 
 image = cv2.imread('bjGame/image.png') 

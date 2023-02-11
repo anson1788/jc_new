@@ -17,8 +17,6 @@ browser = webdriver.Chrome(service=Service(executable_path=getChromeDriverPath()
 
 import os
 import json
-import cv2
-import numpy as np
 
 def countValue(cardIx):
 
@@ -30,13 +28,7 @@ def saveGameState(str):
         outfile.write(res)
 
 def saveGameCard(str):
-    temp = []
-    result = dict()
-    for key, val in str.items():
-        if val not in temp:
-            temp.append(val)
-            result[key] = val
-    res = json.dumps(result,ensure_ascii=False, indent=4)
+    res = json.dumps(str,ensure_ascii=False, indent=4)
     with open("bjGame/cardArr.json", "w",encoding="utf8") as outfile:
         outfile.write(res)
 
@@ -69,10 +61,6 @@ def getSeatCard(json_object):
     else:
         return []
 
-
-def playSound():
-  os.system('afplay sound/bet.wav &')
-
 def calEV():
     cardlocalArr = {}
     totalEV = 0
@@ -82,30 +70,6 @@ def calEV():
     for x in cardlocalArr:
         val = '-1'
         val = cardlocalArr[x][0]
-        if val == '2':  
-            totalEV = totalEV + 5
-        elif val == '3':
-            totalEV = totalEV + 6
-        elif val == '4':
-            totalEV = totalEV + 8
-        elif val == '5':
-            totalEV = totalEV + 11  
-        elif val == '6':
-            totalEV = totalEV + 6  
-        elif val == '7':
-            totalEV = totalEV + 4    
-        elif val == '9':
-            totalEV = totalEV - 3  
-        elif val == 'A':
-            totalEV = totalEV - 9 
-        elif(
-            val == 'T' or 
-            val == 'J' or 
-            val == 'Q' or 
-            val == 'K' 
-        ):
-            totalEV = totalEV - 7    
-        '''
         if (
             val == '2' or 
             val == '3' or 
@@ -122,7 +86,6 @@ def calEV():
             val == 'A'
         ):
             totalEV = totalEV - 1
-        '''
     trueEV = 0
     if len(cardlocalArr)==0:
         trueEV = 0
@@ -130,50 +93,13 @@ def calEV():
         trueEV = totalEV / ((52*8 - len(cardlocalArr))/52)
     return trueEV
 
-def checkScreen(counterIdx):
-    isRedCardFound = False
-    if counterIdx % 5 == 0 and counterIdx != 0:
-        #browser.save_screenshot("bjGame/image.png")
-        counterIdx = 0
-        lower_red = np.array([0,0,200], dtype = "uint8") 
-        upper_red= np.array([100,120,250], dtype = "uint8")
-        image = cv2.imread('bjGame/image.png') 
-        ROI = image[470:470+70, 310:300+70]
-        mask = cv2.inRange(ROI, lower_red, upper_red)
-        detected_output = cv2.bitwise_and(ROI, ROI, mask =  mask) 
-        pixels = cv2.countNonZero(mask)
-        print("i am here")
-        if pixels > 0:
-            #cv2.imshow("red color detection", detected_output) 
-            #cv2.waitKey(0) 
-            isRedCardFound = True
-            print("find red card")
-        else: 
-            print("not found")
-    return counterIdx,isRedCardFound
-
-def checkGameActive():
-    try:
-        backCard = browser.find_elements(by=By.TAG_NAME,value="div")
-        for div in backCard:
-            attr = div.get_attribute("data-role")
-            if attr == "inactivity-message-clickable":
-                print (attr)
-                div.click()
-                print("found black")
-    except Exception as e:
-        print("keep")
-
 
 gameStatus = {}
 cardMastArr = {}
 with open("bjGame/cardArr.json") as json_file:
     cardMastArr = json.load(json_file)
 
-
 counterIdx = 0
-isRedCardShowGlb = False
-
 while True:
     with open("bjGame/gameStatus.json") as json_file:
         gameStatus = json.load(json_file)
@@ -185,8 +111,6 @@ while True:
         saveGameState(gameStatus)
 
     currentGame = {"phase":"pending"}
-    checkGameActive()
-
     for wsData in browser.get_log('performance'):
             wsJson = json.loads((wsData['message']))
             #element =browser.find_elements(By.TAG_NAME, 'input')[0].click()
@@ -215,30 +139,12 @@ while True:
                             print("add new card " + cardMastArr[card['t']])
                     saveGameCard(cardMastArr) 
                     trueEV = calEV()
-                    if trueEV > 1:
-                        playSound()
+                    counterIdx = counterIdx + 1
+                    if counterIdx % 5 == 0 and counterIdx != 0:
+                        #browser.save_screenshot("bjGame/image.png")
+                        counterIdx = 0
                     print("print trueEV : ", trueEV)
-                #counterIdx = checkScreen(counterIdx)
-                '''
-                if ( 
-                    json_object != None and 
-                    "args" in json_object and "name" in json_object["args"] and
-                    json_object["args"]["name"]=="BetsClosed" and isRedCardShow
-                    ):
-                        playSound()
-                        gameStatus["startCourt"] = '1'
-                        gameStatus["ev"] = 0
-                        saveGameState(gameStatus)
-                        isRedCardShow = False
-                '''
-                '''
-                if json_object["type"]=="blackjack.v3.phase" and json_object["args"]["name"]=="InitialDealing":
-                    if isRedCardShow == True:
-                        playSound()
-                        cardMastArr = {}
-                        saveGameCard(cardMastArr)
-                        isRedCardShow = False
-                '''
+                    
                 '''
                     if json_object["type"]=="blackjack.v3.phase" and json_object["args"]["name"]=="InitialDealing":
                         currentGame = {"phase":"start"}
@@ -266,8 +172,4 @@ while True:
                              #f.write(wsJson["message"]["params"]["response"]["payloadData"])
                 #print ("Rx :"+ str(wsJson["message"]["params"]["timestamp"]) + wsJson["message"]["params"]["response"]["payloadData"])
                 #print(wsJson["message"])
-    counterIdx = counterIdx + 1
-    screenResult = checkScreen(counterIdx)
-    counterIdx = screenResult[0]
-    isRedCardShow = screenResult[1]
     time.sleep(1)
